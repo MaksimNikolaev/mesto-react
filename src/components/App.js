@@ -4,7 +4,6 @@ import Footer from './Footer';
 import { useState } from 'react';
 import PopupWithForm from './PopupWithForm';
 import ImagePopup from './ImagePopup';
-const POPUP_OPENED = "popup_opened";
 //import './App.css';
 
 function App() {
