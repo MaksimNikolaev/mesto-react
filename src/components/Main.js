@@ -1,18 +1,27 @@
 import { useEffect, useState } from "react";
 import api from '../utils/Api';
+import Card from './Card';
 
 function Main(props) {
-  const [userName, setuserName] = useState('');
-  const [userDescription, setuserDescription] = useState('');
-  const [userAvatar, setuserAvatar] = useState('');
+  const [userName, setUserName] = useState('');
+  const [userDescription, setUserDescription] = useState('');
+  const [userAvatar, setUserAvatar] = useState('');
+  const [cards, setCards] = useState([]);
 
   useEffect(() => {
     api.getInitialUser().then((promis) => {
-      setuserName(promis.name);
-      setuserDescription(promis.about);
-      setuserAvatar(promis.avatar);
+      setUserName(promis.name);
+      setUserDescription(promis.about);
+      setUserAvatar(promis.avatar);
+    })    
+  },[])
+
+  useEffect(() => {
+    api.getInitialCards().then((cards) => {
+      setCards(cards)
     })
-  })
+  },[])
+
   return (
     <main className="content">
         <section className="profile">
@@ -30,7 +39,13 @@ function Main(props) {
           <button onClick={props.onAddPlace} type="button" className="profile__add-button"></button>
         </section>
         <section className="elements" aria-label="Фотографии мест">
-          <ul className="elements__items"></ul>
+          <ul className="elements__items">
+         { cards.reverse().map((data) => {
+    return (
+       <Card link={data.link} name={data.name} likes={data.likes.length} key={`${data._id}`}/>
+    )
+  })}
+          </ul>
         </section>
       </main>
   )
