@@ -13,13 +13,19 @@ function Main(props) {
       setUserName(promis.name);
       setUserDescription(promis.about);
       setUserAvatar(promis.avatar);
-    })    
+    })
+    .catch((err) => {
+      console.log(err);
+    });    
   },[])
 
   useEffect(() => {
     api.getInitialCards().then((cards) => {
       setCards(cards)
     })
+    .catch((err) => {
+      console.log(err);
+    });
   },[])
 
   return (
@@ -42,7 +48,7 @@ function Main(props) {
           <ul className="elements__items">
          { cards.reverse().map((data) => {
     return (
-       <Card link={data.link} name={data.name} likes={data.likes.length} key={`${data._id}`}/>
+       <Card card={data} key={data._id} onCardClick={props.onCardClick}/>
     )
   })}
           </ul>
