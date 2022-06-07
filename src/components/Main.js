@@ -32,7 +32,7 @@ function Main({onEditProfile, onAddPlace, onEditAvatar, onCardClick}) {
     <main className="content">
         <section className="profile">
           <button onClick={onEditAvatar}  className="profile__button">
-            <img src={userAvatar} alt={`Avatar ${userName}`} className="profile__avatar"/>
+            {userAvatar && (<img src={userAvatar} alt={`Avatar ${userName}`} className="profile__avatar"/>)}
           </button>
 
           <div className="profile__info">
