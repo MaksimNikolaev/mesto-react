@@ -53,16 +53,9 @@ class Api {
     }).then(this._errorHandler);
   }
 
-  addLike(id) {
+  changeLikeCardStatus(id, method) {
     return fetch(`https://mesto.${this._url}cards/${id}/likes`, {
-      method: "PUT",
-      headers: this._headers,
-    }).then(this._errorHandler);
-  }
-
-  removeLike(id) {
-    return fetch(`https://mesto.${this._url}cards/${id}/likes`, {
-      method: "DELETE",
+      method: method ? "PUT" : "DELETE",
       headers: this._headers,
     }).then(this._errorHandler);
   }

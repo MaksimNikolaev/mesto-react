@@ -1,9 +1,12 @@
 import Header from './Header';
 import Main from './Main';
 import Footer from './Footer';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import PopupWithForm from './PopupWithForm';
 import ImagePopup from './ImagePopup';
+import api from '../utils/Api';
+import {CurrentUserContext} from '../contexts/CurrentUserContext'
+import EditProfilePopup from './EditProfilePopup';
 //import './App.css';
 
 function App() {
@@ -11,6 +14,16 @@ function App() {
   const [isAddPlacePopupOpen, setAddPlacePopupOpen] = useState(false);
   const [isEditAvatarPopupOpen, setEditAvatarPopupOpen] = useState(false);
   const [selectedCard, setSelectedCard] = useState({});
+  const [currentUser, setCurrentUser] = useState({});
+
+  useEffect(() => {
+    api.getInitialUser().then((promis) => {
+      setCurrentUser(promis);
+    })
+    .catch((err) => {
+      console.log(err);
+    });    
+  },[])
 
   function handleEditProfileClick() {
     setEditProfilePopupOpen(true);
@@ -35,35 +48,24 @@ function App() {
     setSelectedCard({});
   }
 
+  function handleUpdateUser() {
+    api.setUserInfo(currentUser)
+    .then((promis) => {
+      setCurrentUser(promis);
+      closeAllPopups();
+    })
+    .catch((err) => {
+      console.log(err);
+    });    
+  }
+
   return (
+    <CurrentUserContext.Provider value={currentUser}> 
   <div className="page">
     <div className="container">
       <Header />
       <Main onEditProfile={handleEditProfileClick} onAddPlace={handleAddPlaceClick}  onEditAvatar={handleEditAvatarClick} onCardClick={handleCardClick}/>
-      <PopupWithForm name="editProfile" title="Редактировать профиль" isOpen={isEditProfilePopupOpen} onClose={closeAllPopups} textButton="Сохранить">
-      <input
-            type="text"
-            id="name"
-            className="popup__input popup__input_data_name"
-            name="name"
-            placeholder="Введите имя"
-            minLength={2}
-            maxLength={40}
-            required
-          />
-          <span id="name-error"></span>
-          <input
-            type="text"
-            id="about"
-            className="popup__input popup__input_data_job"
-            name="about"
-            minLength={2}
-            maxLength={200}
-            placeholder="Введите информацию о себе"
-            required
-          />
-          <span id="about-error"></span>
-      </PopupWithForm>
+      <EditProfilePopup isOpen={isEditProfilePopupOpen} onClose={closeAllPopups} onUpdateUser={handleUpdateUser}/>
       <PopupWithForm name="addPlace" title="Новое место" isOpen={isAddPlacePopupOpen} onClose={closeAllPopups} textButton="Создать">
       <input
             type="text"
@@ -101,6 +103,7 @@ function App() {
       <Footer />
     </div>    
     </div>
+    </CurrentUserContext.Provider>
   );
 }
 
