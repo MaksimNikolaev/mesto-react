@@ -13,7 +13,7 @@ function EditAvatarPopup({isOpen, onClose, onUpdateAvatar}) {
     e.preventDefault();
     onUpdateAvatar({
       avatar: avatarRef.current.value,
-    });debugger;
+    });
   } 
   
   return (
