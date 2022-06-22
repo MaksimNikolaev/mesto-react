@@ -8,13 +8,15 @@ import {CurrentUserContext} from '../contexts/CurrentUserContext'
 import EditProfilePopup from './EditProfilePopup';
 import EditAvatarPopup from './EditAvatarPopup';
 import AddPlacePopup from './AddPlacePopup';
-//import './App.css';
+import PopupWithConfirmation from './PopupWithConfirmation';
 
 function App() {
   const [isEditProfilePopupOpen, setEditProfilePopupOpen] = useState(false);
   const [isAddPlacePopupOpen, setAddPlacePopupOpen] = useState(false);
   const [isEditAvatarPopupOpen, setEditAvatarPopupOpen] = useState(false);
+  const [isRemoveCardPopupOpen, setRemoveCardPopupOpen] = useState(false);
   const [selectedCard, setSelectedCard] = useState({});
+  const [selectedCardForRemove, setSelectedCardForRemove] = useState({});
   const [currentUser, setCurrentUser] = useState({});
   const [cards, setCards] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -46,6 +48,11 @@ function App() {
     setEditAvatarPopupOpen(true);
   };
 
+  function handleRemoveCardClick(card) {
+    setRemoveCardPopupOpen(true);
+    setSelectedCardForRemove(card);
+  };
+
   function handleCardClick(card) {
     setSelectedCard(card);
   } 
@@ -54,6 +61,7 @@ function App() {
     setEditProfilePopupOpen(false);
     setAddPlacePopupOpen(false);
     setEditAvatarPopupOpen(false);
+    setRemoveCardPopupOpen(false);
     setSelectedCard({});
   }
 
@@ -98,7 +106,10 @@ function App() {
 
     function handleCardDelete(card) {
       api.removeCard(card._id)
-        .then(() => {setCards((state) => state.filter((item) => item !== card))})
+        .then(() => {
+          setCards((state) => state.filter((item) => item !== card));
+          closeAllPopups();
+        })
         .catch((err) => {console.log(`Ошибка: ${err}`)});     
     }
 
@@ -128,12 +139,15 @@ function App() {
         onEditAvatar={handleEditAvatarClick} 
         onCardClick={handleCardClick} 
         cards={cards} 
-        onCardLike={handleCardLike} 
-        onCardDelete={handleCardDelete}/>
+        onCardLike={handleCardLike}
+        onCardDelete={handleRemoveCardClick} 
+        isLoading={loading}        
+        />
       <EditProfilePopup isOpen={isEditProfilePopupOpen} onClose={closeAllPopups} onUpdateUser={handleUpdateUser} isLoading={loading}/>
       <AddPlacePopup isOpen={isAddPlacePopupOpen} onClose={closeAllPopups} onAddPlace={handleAddPlaceSubmit} isLoading={loading}/>
       <EditAvatarPopup isOpen={isEditAvatarPopupOpen} onClose={closeAllPopups} onUpdateAvatar={handleUpdateAvatar} isLoading={loading}/>
       <ImagePopup card={selectedCard} onClose={closeAllPopups}/>
+      <PopupWithConfirmation isOpen={isRemoveCardPopupOpen} onClose={closeAllPopups} card={selectedCardForRemove} onDeleteCard={handleCardDelete}/>
       <Footer />
     </div>    
     </div>
