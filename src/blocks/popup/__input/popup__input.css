@@ -9,6 +9,7 @@
   line-height: 17px;
   padding: 0;
   padding-bottom: 10px;
+  display: block;
 }
 
 .popup__input:first-of-type {
