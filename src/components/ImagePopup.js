@@ -1,6 +1,6 @@
 function ImagePopup({card,onClose}) {
   return (
-    <div className={`popup popup_photo ${card.link ? "popup_opened" : "" }`}>
+    <div className={`popup popup_photo ${card.link && "popup_opened"}`}>
       <div className="popup__galery">
         <button
           type="button"

@@ -22,18 +22,12 @@ function App() {
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    api.getInitialUser().then((promis) => {
-      setCurrentUser(promis);
-    })
-    .catch((err) => {
-      console.log(err);
-    });    
-  },[])
-
-  useEffect(() => {
     api.getInitialCards()
-    .then((cards) => {setCards(cards)})
-    .catch((err) => {console.log(err)});
+      .then((cards) => {setCards(cards)})
+      .catch((err) => {console.log(err)});
+    api.getInitialUser()
+      .then((promis) => {setCurrentUser(promis)})
+      .catch((err) => {console.log(err)});    
   },[])
 
   function handleEditProfileClick() {
