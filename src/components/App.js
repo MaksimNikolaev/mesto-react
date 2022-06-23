@@ -140,8 +140,7 @@ function App() {
       onCardClick={handleCardClick} 
       cards={cards} 
       onCardLike={handleCardLike}
-      onCardDelete={handleRemoveCardClick} 
-      isLoading={loading}               
+      onCardDelete={handleRemoveCardClick}              
       />
       }      
       <EditProfilePopup isOpen={isEditProfilePopupOpen} onClose={closeAllPopups} onUpdateUser={handleUpdateUser} isLoading={loading}/>
