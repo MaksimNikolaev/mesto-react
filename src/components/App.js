@@ -22,6 +22,7 @@ function App() {
   const [cards, setCards] = useState([]);
   const [loading, setLoading] = useState(false);
   const [loadingPage, setLoadingPage] = useState(false);
+  const [selectedFilter, setSelectedFilter] = useState('');
   
 
   useEffect(() => {
@@ -32,7 +33,7 @@ function App() {
     api.getInitialUser()
       .then((promis) => {setCurrentUser(promis)})
       .catch((err) => {console.log(err)})
-  },[])
+  },[selectedFilter])
 
   function handleEditProfileClick() {
     setEditProfilePopupOpen(true);
@@ -140,7 +141,9 @@ function App() {
       onCardClick={handleCardClick} 
       cards={cards} 
       onCardLike={handleCardLike}
-      onCardDelete={handleRemoveCardClick}              
+      onCardDelete={handleRemoveCardClick}  
+      selectedFilter={selectedFilter}    
+      setSelectedFilter={setSelectedFilter}        
       />
       }      
       <EditProfilePopup isOpen={isEditProfilePopupOpen} onClose={closeAllPopups} onUpdateUser={handleUpdateUser} isLoading={loading}/>
