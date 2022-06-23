@@ -6,7 +6,7 @@ import Myselect from "./MySelect";
 function Main({onEditProfile, onAddPlace, onEditAvatar, onCardClick, cards, onCardLike, onCardDelete, selectedFilter, setSelectedFilter}) {
   
   const currentUser = useContext(CurrentUserContext);
-
+ 
   const filterCard = (filter) => {
     setSelectedFilter(filter)
   }
@@ -42,12 +42,22 @@ function Main({onEditProfile, onAddPlace, onEditAvatar, onCardClick, cards, onCa
           {(() => {
                 switch(selectedFilter) {
                   case "My card": 
-                  return cards.map((data) => {if (currentUser._id === data.owner._id) {
+                  const newArr = cards.filter((data) => {if (currentUser._id === data.owner._id) {
                     return (
                      <Card card={data} key={data._id} onCardClick={onCardClick} onCardLike={onCardLike} onTrashClick={onCardDelete}/>
                      )
-                  }             
-                  });                  
+                  }});
+                  if (newArr.length>0) {
+                    return newArr.map((data) => { 
+                      return (
+                       <Card card={data} key={data._id} onCardClick={onCardClick} onCardLike={onCardLike} onTrashClick={onCardDelete}/>
+                       )
+                    });  
+                  } else {
+                    return <h2 style={{color: "white", fontSize:"18px", display: "flex", justifyContent:"center"}}>Собственных карточек нет, для отображения загрузите новые</h2>
+                  }
+                 
+                                  
                   case "Alien card": 
                   return cards.map((data) => {if (currentUser._id !== data.owner._id) {
                     return (
