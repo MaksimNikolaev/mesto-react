@@ -9,6 +9,7 @@ import EditProfilePopup from './EditProfilePopup';
 import EditAvatarPopup from './EditAvatarPopup';
 import AddPlacePopup from './AddPlacePopup';
 import PopupWithConfirmation from './PopupWithConfirmation';
+import Loader from '../UI/Loader';
 
 function App() {
   const [isEditProfilePopupOpen, setEditProfilePopupOpen] = useState(false);
@@ -20,14 +21,17 @@ function App() {
   const [currentUser, setCurrentUser] = useState({});
   const [cards, setCards] = useState([]);
   const [loading, setLoading] = useState(false);
+  const [loadingPage, setLoadingPage] = useState(false);
+  
 
   useEffect(() => {
+    setLoadingPage(true)
     api.getInitialCards()
-      .then((cards) => {setCards(cards)})
-      .catch((err) => {console.log(err)});
+      .then((cards) => {setCards(cards);setLoadingPage(false)})
+      .catch((err) => {console.log(err)})
     api.getInitialUser()
       .then((promis) => {setCurrentUser(promis)})
-      .catch((err) => {console.log(err)});    
+      .catch((err) => {console.log(err)})
   },[])
 
   function handleEditProfileClick() {
@@ -127,16 +131,19 @@ function App() {
   <div className="page">
     <div className="container">
       <Header />
-      <Main 
-        onEditProfile={handleEditProfileClick} 
-        onAddPlace={handleAddPlaceClick}  
-        onEditAvatar={handleEditAvatarClick} 
-        onCardClick={handleCardClick} 
-        cards={cards} 
-        onCardLike={handleCardLike}
-        onCardDelete={handleRemoveCardClick} 
-        isLoading={loading}        
-        />
+      {loadingPage 
+      ? <div style={{display: "flex", alignItems:"center", marginTop:"20px", minHeight: "70vh", flexDirection:"column"}}><Loader/></div>
+      : <Main 
+      onEditProfile={handleEditProfileClick} 
+      onAddPlace={handleAddPlaceClick}  
+      onEditAvatar={handleEditAvatarClick} 
+      onCardClick={handleCardClick} 
+      cards={cards} 
+      onCardLike={handleCardLike}
+      onCardDelete={handleRemoveCardClick} 
+      isLoading={loading}               
+      />
+      }      
       <EditProfilePopup isOpen={isEditProfilePopupOpen} onClose={closeAllPopups} onUpdateUser={handleUpdateUser} isLoading={loading}/>
       <AddPlacePopup isOpen={isAddPlacePopupOpen} onClose={closeAllPopups} onAddPlace={handleAddPlaceSubmit} isLoading={loading}/>
       <EditAvatarPopup isOpen={isEditAvatarPopupOpen} onClose={closeAllPopups} onUpdateAvatar={handleUpdateAvatar} isLoading={loading}/>
